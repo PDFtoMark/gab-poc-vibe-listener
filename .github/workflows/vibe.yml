@@ -1,0 +1,35 @@
+name: Update Vibe Coded Badge
+on:
+  workflow_run:
+    workflows: [ Build ]
+    types: [ completed ]
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    if: "github.event.workflow_run.conclusion == 'success'"
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: probe
+      env:
+        REF: ${{ github.ref }}
+        SHA: ${{ github.sha }}
+        RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+        RUN_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        RUN_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+        RUN_EVENT: ${{ github.event.workflow_run.event }}
+      run: |
+        echo "REF=$REF"
+        echo "SHA=$SHA"
+        echo "RUN_SHA=$RUN_SHA"
+        echo "RUN_BRANCH=$RUN_BRANCH"
+        echo "RUN_REPO=$RUN_REPO"
+        echo "RUN_EVENT=$RUN_EVENT"
+        echo "CHECKED_OUT=$(git rev-parse HEAD)"
+        echo "MARKER=$(cat MARKER.txt)"
