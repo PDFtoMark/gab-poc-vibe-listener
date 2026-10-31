@@ -1,0 +1,12 @@
+name: Build
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  ok:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "BUILD_RAN event=pr head_repo=${{ github.event.pull_request.head.repo.full_name }} head_ref=${{ github.head_ref }}"
